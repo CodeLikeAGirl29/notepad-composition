@@ -1556,3 +1556,53 @@ div.nbmenu__row {
 .has-tip:focus-visible::before {
   transform: rotate(45deg) scale(1);
 }
+
+/* ============================================================
+   INTERACTIVE CHECKLISTS (read mode)
+   ============================================================ */
+.prose li.task {
+  list-style: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0.35em 0;
+}
+
+.tick {
+  flex-shrink: 0;
+  margin-top: 4px;
+  width: 19px;
+  height: 19px;
+  border-radius: 5px;
+  border: 1.5px solid #c7cdd0;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.tick:hover {
+  border-color: var(--accent);
+}
+
+.tick--on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.task__body {
+  flex: 1;
+}
+
+.task__body p {
+  margin: 0;
+}
+
+.task--done .task__body {
+  color: var(--muted);
+  text-decoration: line-through;
+}

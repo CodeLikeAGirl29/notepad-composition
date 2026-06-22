@@ -152,6 +152,19 @@ export default function NotesApp() {
     );
   }
 
+  // flip a `- [ ]` / `- [x]` checkbox on a given source line of the active note
+  function toggleTask(line: number) {
+    if (!active) return;
+    const lines = active.body.split("\n");
+    const i = line - 1;
+    if (i < 0 || i >= lines.length) return;
+    if (/\[ \]/.test(lines[i])) lines[i] = lines[i].replace(/\[ \]/, "[x]");
+    else if (/\[[xX]\]/.test(lines[i]))
+      lines[i] = lines[i].replace(/\[[xX]\]/, "[ ]");
+    else return;
+    updateActive({ body: lines.join("\n") });
+  }
+
   function deleteActive() {
     if (!active) return;
     const remaining = notes.filter((n) => n.id !== active.id);
@@ -748,6 +761,45 @@ export default function NotesApp() {
                                 >
                                   {children}
                                 </a>
+                              );
+                            },
+                            input: () => null,
+                            li: ({
+                              node,
+                              children,
+                              className,
+                              ...props
+                            }: any) => {
+                              const cls = node?.properties?.className;
+                              const isTask =
+                                Array.isArray(cls) &&
+                                cls.includes("task-list-item");
+                              const line = node?.position?.start?.line;
+                              if (!isTask || !line) {
+                                return (
+                                  <li className={className} {...props}>
+                                    {children}
+                                  </li>
+                                );
+                              }
+                              const src =
+                                active.body.split("\n")[line - 1] || "";
+                              const checked = /\[[xX]\]/.test(src);
+                              return (
+                                <li
+                                  className={`task${checked ? " task--done" : ""}`}
+                                >
+                                  <button
+                                    type="button"
+                                    role="checkbox"
+                                    aria-checked={checked}
+                                    className={`tick${checked ? " tick--on" : ""}`}
+                                    onClick={() => toggleTask(line)}
+                                  >
+                                    {checked ? "✓" : ""}
+                                  </button>
+                                  <div className="task__body">{children}</div>
+                                </li>
                               );
                             },
                           }}
