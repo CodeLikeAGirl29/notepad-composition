@@ -1,53 +1,47 @@
-# Composition - a Next.js notes app
+# Composition - A Next.js Notes App
 
-A note-taking app styled after a composition notebook: a marbled cover for the
-list, and a real ruled page (blue rules + red margin line) to write on. Notes
-persist locally in your browser via `localStorage`.
-
-## Run it
-
-```bash
-npm install
-npm run dev
-```
-
-Open http://localhost:3000
+A note-taking app inspired by the classic composition notebook. It features a marbled cover for your note list and a ruled page for writing. All notes are saved directly in your browser using `localStorage`, making it fast, private, and serverless.
 
 ## Features
 
-- **Write / Read toggle** - write on ruled paper; flip to Read to see your
-  markdown typeset on a clean page (powered by `react-markdown` + `remark-gfm`).
-- **Tags** - add tags under any title, then filter the notebook by tag from the
-  cover. Press Enter or comma to add; Backspace on an empty input removes the last.
-- **Light / dark cover** - flip the cover from the top corner; the choice is
-  remembered.
-- **Search, autosave, live stats** - full-text search across titles, bodies, and
-  tags; every keystroke saves; word/character counts update live.
+- **Classic Notebook Feel**: A marbled cover lists your notes, and a ruled page with blue rules and a red margin line provides the writing surface.
+- **Write & Read Modes**: Jot down notes on ruled paper in "Write" mode, then flip to "Read" mode to see your Markdown (`react-markdown` + `remark-gfm`) rendered on a clean page.
+- **Local Persistence**: All notes are stored in your browser's `localStorage`. No accounts, no cloud, just your notes on your machine.
+- **Tagging System**: Organize notes with tags. Add/remove tags on any note, then filter the entire notebook by tag from the cover. A tag manager allows for renaming and deleting tags globally.
+- **Wiki-links & Backlinks**: Connect your thoughts by creating links between notes using `[[Note Title]]` syntax, with autocomplete for existing titles. Each note automatically shows a list of backlinks from other notes.
+- **Note Graph**: Visualize the connections between your notes in an interactive, force-directed graph.
+- **Multiple Notebooks**: Group your notes into different notebooks and easily switch between them.
+- **Dynamic & Responsive**: Features full-text search across titles, bodies, and tags, autosave on every keystroke, and live word/character counts. The interface is responsive down to a single mobile pane.
+- **Theming**: Switch between a light and dark marbled cover. Your preference is saved.
 
-## Structure
+## Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Run the development server
+npm run dev
+```
+
+Then open `http://localhost:3000` in your browser.
+
+## Project Structure
 
 ```
 app/
-  layout.tsx      # loads Fraunces / Newsreader / JetBrains Mono via next/font
-  page.tsx        # renders the client component
-  globals.css     # all styling: themeable cover, ruled page, prose, tags
+  layout.tsx      # Loads fonts (Fraunces, Newsreader, JetBrains Mono)
+  page.tsx        # Renders the main client component
+  globals.css     # All styling: themes, ruled page, prose, tags, etc.
 components/
-  NotesApp.tsx    # client component: CRUD, tags, search, markdown, theme
+  NotesApp.tsx    # The core client component: state, CRUD, tags, search, wiki-links
+  GraphView.tsx   # Renders the interactive note graph with a physics simulation
 lib/
-  notes.ts        # types + localStorage helpers + tag/theme utilities
+  notes.ts        # Data types, localStorage helpers, and utility functions
 ```
 
-## Design
+## Design Details
 
-- **Palette** - cover `#15130F` (or light `#E8E1D0`), paper `#FAF7EF`,
-  blue rule `#AEC2D7`, red margin `#CC7166`, ink-blue accent `#34607E`.
-- **Type** - Fraunces (wordmark + titles + markdown headings), Newsreader (the
-  writing surface), JetBrains Mono (dates, counts, tags, labels).
-- **Signature** - the editor is the page: a repeating `linear-gradient` draws the
-  blue rules at the same rhythm as the text's line-height (`--line: 34px`), and a
-  second gradient paints the red margin line. The Write view is handwriting on
-  rules; the Read view is the same note "printed" - clean, no rules.
-
-Quality floor: responsive to a single mobile pane, visible keyboard focus, and
-`prefers-reduced-motion` respected. Cover colors are driven by a small set of
-`--cover-*` variables swapped by `[data-theme]`, so theming stays one place.
+- **Palette**: The cover uses a dark (`#15130F`) or light (`#E8E1D0`) theme. The paper is `#FAF7EF`, with a blue rule (`#AEC2D7`), red margin (`#CC7166`), and an ink-blue accent (`#34607E`).
+- **Typography**: Fraunces is used for the wordmark and titles, Newsreader for the main writing surface, and JetBrains Mono for metadata, tags, and labels.
+- **The Editor**: The editor is designed to be the page itself. A repeating `linear-gradient` draws the blue rules at the same rhythm as the text's line-height, while a second gradient paints the red margin line. The "Write" view simulates a handwritten experience, while "Read" presents the same note as a clean, typeset page.
