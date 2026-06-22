@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import GraphView from "@/components/GraphView";
 import {
   Note,
   Notebook,
@@ -46,6 +47,7 @@ export default function NotesApp() {
   const [editingNbId, setEditingNbId] = useState<string | null>(null);
   const [nbDraft, setNbDraft] = useState("");
   const [tagMgrOpen, setTagMgrOpen] = useState(false);
+  const [mapOpen, setMapOpen] = useState(false);
   const [renamingTag, setRenamingTag] = useState<string | null>(null);
   const [tagDraft, setTagDraft] = useState("");
 
@@ -374,14 +376,24 @@ export default function NotesApp() {
                 Composition<em>.</em>
               </h1>
             </div>
-            <button
-              className="theme-toggle"
-              onClick={toggleTheme}
-              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} cover`}
-              title="Flip the cover"
-            >
-              {theme === "dark" ? <Sun /> : <Moon />}
-            </button>
+            <div className="cover__actions">
+              <button
+                className="theme-toggle has-tip"
+                onClick={() => setMapOpen(true)}
+                aria-label="Open note map"
+                data-tip="Open the map"
+              >
+                <MapIcon />
+              </button>
+              <button
+                className="theme-toggle has-tip"
+                onClick={toggleTheme}
+                aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} cover`}
+                data-tip={theme === "dark" ? "Light cover" : "Dark cover"}
+              >
+                {theme === "dark" ? <Sun /> : <Moon />}
+              </button>
+            </div>
           </div>
 
           {nbMenuOpen && (
@@ -872,6 +884,24 @@ export default function NotesApp() {
           </div>
         </div>
       )}
+
+      {/* ---------- the map ---------- */}
+      {mapOpen && (
+        <GraphView
+          notes={notes}
+          notebooks={notebooks}
+          activeId={activeId}
+          onClose={() => setMapOpen(false)}
+          onOpen={(id) => {
+            const n = notes.find((x) => x.id === id);
+            if (n) setActiveNotebookId(n.notebookId);
+            setActiveId(id);
+            setMode("read");
+            setView("page");
+            setMapOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -1032,6 +1062,26 @@ function Moon() {
       aria-hidden="true"
     >
       <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+    </svg>
+  );
+}
+function MapIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="6" cy="7" r="2.4" />
+      <circle cx="18" cy="6" r="2.4" />
+      <circle cx="13" cy="18" r="2.4" />
+      <path d="M8 8.2l3.2 8M16.5 8l-3 8.2M8 6.6l8 -0.4" />
     </svg>
   );
 }

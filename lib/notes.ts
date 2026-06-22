@@ -242,6 +242,18 @@ export function backlinks(notes: Note[], target: Note): Note[] {
   return notes.filter((n) => n.id !== target.id && re.test(n.body));
 }
 
+/** Titles referenced by [[wiki-links]] in a body, in order, de-duplicated. */
+export function extractLinks(body: string): string[] {
+  const out: string[] = [];
+  const re = /\[\[([^\]]+)\]\]/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(body)) !== null) {
+    const t = m[1].trim();
+    if (t && !out.includes(t)) out.push(t);
+  }
+  return out;
+}
+
 /** Turn [[Title]] into markdown links with a wiki: scheme for click handling. */
 export function linkifyWiki(body: string): string {
   return body.replace(/\[\[([^\]]+)\]\]/g, (_m, raw) => {

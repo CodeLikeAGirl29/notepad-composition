@@ -1345,3 +1345,214 @@ div.nbmenu__row {
   background: #f6e7e5;
   color: var(--margin);
 }
+
+/* ============================================================
+   COVER ACTIONS (map + theme)
+   ============================================================ */
+.cover__actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   THE MAP (force-directed graph overlay)
+   ============================================================ */
+.map {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+}
+
+.map__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 26px;
+  border-bottom: 1px solid var(--paper-edge);
+  flex-wrap: wrap;
+}
+
+.map__kicker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.map__title h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 22px;
+  margin: 2px 0 0;
+  color: var(--ink);
+}
+
+.map__legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.map__leg {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.map__leg i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.map__close {
+  background: transparent;
+  border: 1px solid var(--paper-edge);
+  color: var(--muted);
+  font-size: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.map__close:hover {
+  color: var(--ink);
+  background: var(--paper-edge);
+}
+
+.map__canvas {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.map__canvas svg {
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+
+.map__edges line {
+  stroke: #d8d2c4;
+  stroke-width: 1.5;
+}
+
+.map__node {
+  cursor: pointer;
+}
+
+.map__node text {
+  font-family: var(--font-body);
+  font-size: 13px;
+  fill: var(--ink);
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 3px;
+  pointer-events: none;
+}
+
+.map__node.is-active text {
+  font-weight: 600;
+}
+
+.map__node:hover text {
+  fill: var(--accent);
+}
+
+.map__empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.map__empty p {
+  max-width: 42ch;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.map__empty code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: #efece2;
+  padding: 0.12em 0.4em;
+  border-radius: 4px;
+}
+
+.map__hint {
+  margin: 0;
+  padding: 11px 26px;
+  border-top: 1px solid var(--paper-edge);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* ============================================================
+   TOOLTIPS (hover + keyboard focus)
+   ============================================================ */
+.has-tip {
+  position: relative;
+}
+
+.has-tip::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  white-space: nowrap;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  padding: 5px 9px;
+  border-radius: 7px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(-3px);
+  pointer-events: none;
+  transition: opacity 0.14s ease, transform 0.14s ease;
+  z-index: 60;
+}
+
+.has-tip::before {
+  content: "";
+  position: absolute;
+  top: calc(100% + 3px);
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  background: var(--ink);
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.14s ease;
+  z-index: 60;
+}
+
+.has-tip:hover::after,
+.has-tip:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.has-tip:hover::before,
+.has-tip:focus-visible::before {
+  transform: rotate(45deg) scale(1);
+}
