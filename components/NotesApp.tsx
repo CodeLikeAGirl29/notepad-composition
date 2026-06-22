@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import GraphView from "@/components/GraphView";
+import CommandPalette, { Command } from "@/components/CommandPalette";
 import {
   Note,
   Notebook,
@@ -48,6 +49,7 @@ export default function NotesApp() {
   const [nbDraft, setNbDraft] = useState("");
   const [tagMgrOpen, setTagMgrOpen] = useState(false);
   const [mapOpen, setMapOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const [renamingTag, setRenamingTag] = useState<string | null>(null);
   const [tagDraft, setTagDraft] = useState("");
 
@@ -95,6 +97,18 @@ export default function NotesApp() {
       pendingCaret.current = null;
     }
   });
+
+  // Cmd/Ctrl+K toggles the command palette
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {
+        e.preventDefault();
+        setPaletteOpen((o) => !o);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   const active = useMemo(
     () => notes.find((n) => n.id === activeId) ?? null,
@@ -178,6 +192,72 @@ export default function NotesApp() {
   function openNote(id: string) {
     setActiveId(id);
     setView("page");
+  }
+
+  // open a specific note from anywhere (map, palette): scope to its notebook + read mode
+  function openNoteById(id: string) {
+    const n = notes.find((x) => x.id === id);
+    if (n) setActiveNotebookId(n.notebookId);
+    setActiveId(id);
+    setMode("read");
+    setView("page");
+  }
+
+  function buildCommands(): Command[] {
+    const recentNotes = [...notes].sort((a, b) => b.updatedAt - a.updatedAt);
+    return [
+      {
+        id: "cmd-new",
+        label: "New note",
+        hint: "Action",
+        group: "Actions",
+        run: createNote,
+      },
+      {
+        id: "cmd-map",
+        label: "Open the map",
+        hint: "Action",
+        group: "Actions",
+        run: () => setMapOpen(true),
+      },
+      {
+        id: "cmd-theme",
+        label:
+          theme === "dark" ? "Switch to light cover" : "Switch to dark cover",
+        hint: "Action",
+        group: "Actions",
+        run: toggleTheme,
+      },
+      {
+        id: "cmd-tags",
+        label: "Manage tags",
+        hint: "Action",
+        group: "Actions",
+        run: () => setTagMgrOpen(true),
+      },
+      {
+        id: "cmd-nb-all",
+        label: "All notes",
+        hint: "Notebook",
+        group: "Notebooks",
+        run: () => selectNotebook(ALL),
+      },
+      ...notebooks.map((nb) => ({
+        id: "cmd-nb-" + nb.id,
+        label: nb.name,
+        hint: "Notebook",
+        group: "Notebooks" as const,
+        run: () => selectNotebook(nb.id),
+      })),
+      ...recentNotes.map((n) => ({
+        id: "cmd-note-" + n.id,
+        label: n.title.trim() || "Untitled",
+        hint: "Note",
+        group: "Notes" as const,
+        keywords: n.tags.join(" "),
+        run: () => openNoteById(n.id),
+      })),
+    ];
   }
 
   /* ---------- tags on the active note ---------- */
@@ -945,13 +1025,17 @@ export default function NotesApp() {
           activeId={activeId}
           onClose={() => setMapOpen(false)}
           onOpen={(id) => {
-            const n = notes.find((x) => x.id === id);
-            if (n) setActiveNotebookId(n.notebookId);
-            setActiveId(id);
-            setMode("read");
-            setView("page");
+            openNoteById(id);
             setMapOpen(false);
           }}
+        />
+      )}
+
+      {/* ---------- command palette ---------- */}
+      {paletteOpen && (
+        <CommandPalette
+          commands={buildCommands()}
+          onClose={() => setPaletteOpen(false)}
         />
       )}
     </div>

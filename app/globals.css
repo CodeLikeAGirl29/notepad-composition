@@ -1606,3 +1606,138 @@ div.nbmenu__row {
   color: var(--muted);
   text-decoration: line-through;
 }
+
+/* ============================================================
+   COMMAND PALETTE (Cmd/Ctrl+K)
+   ============================================================ */
+.cmdk {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12vh 20px 20px;
+}
+
+.cmdk__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 8, 6, 0.45);
+  border: none;
+  cursor: default;
+}
+
+.cmdk__panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+  background: var(--paper);
+  border: 1px solid var(--paper-edge);
+  border-radius: 14px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh;
+}
+
+.cmdk__input {
+  border: none;
+  border-bottom: 1px solid var(--paper-edge);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--ink);
+  padding: 16px 18px;
+}
+
+.cmdk__input::placeholder {
+  color: var(--muted-light);
+}
+
+.cmdk__input:focus {
+  outline: none;
+}
+
+.cmdk__list {
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.cmdk__group {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 10px 10px 5px;
+}
+
+.cmdk__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cmdk__item.is-active {
+  background: var(--accent-soft);
+}
+
+.cmdk__label {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cmdk__item.is-active .cmdk__label {
+  color: var(--accent);
+}
+
+.cmdk__hint {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cmdk__empty {
+  padding: 22px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.cmdk__foot {
+  display: flex;
+  gap: 16px;
+  padding: 9px 14px;
+  border-top: 1px solid var(--paper-edge);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.cmdk__foot kbd {
+  font-family: var(--font-mono);
+  background: #efece2;
+  border: 1px solid var(--paper-edge);
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-right: 3px;
+  font-size: 10px;
+}
