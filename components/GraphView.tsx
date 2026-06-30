@@ -146,9 +146,9 @@ export default function GraphView({
         for (let j = i + 1; j < list.length; j++) {
           const a = list[i],
             b = list[j];
-          let dx = a.x - b.x,
+          const dx = a.x - b.x,
             dy = a.y - b.y;
-          let d2 = dx * dx + dy * dy || 0.01;
+          const d2 = dx * dx + dy * dy || 0.01;
           const d = Math.sqrt(d2);
           const f = (4200 / d2) * alpha;
           const fx = (dx / d) * f,
@@ -165,7 +165,7 @@ export default function GraphView({
         const a = byId.get(e.s),
           b = byId.get(e.t);
         if (!a || !b) continue;
-        let dx = b.x - a.x,
+        const dx = b.x - a.x,
           dy = b.y - a.y;
         const d = Math.sqrt(dx * dx + dy * dy) || 0.01;
         const f = (d - 96) * 0.012 * alpha;
