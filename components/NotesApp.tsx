@@ -350,7 +350,7 @@ export default function NotesApp() {
           .map((n) => n.title.trim()),
       ),
     );
-    let matches = q
+    const matches = q
       ? titles.filter((t) => t.toLowerCase().includes(q))
       : titles;
     matches.sort((a, b) => {
